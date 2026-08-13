@@ -130,7 +130,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-color: #d4d4d4;
+    background-color: #e5e5e5;
     transition: background-color 1000ms ease;
   }
 
