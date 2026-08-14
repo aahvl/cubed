@@ -3,7 +3,7 @@
     import cubed from "../Images/cubed-logo.webp";
     import HeroRsvp from '../components/HeroRsvp.svelte'
 ---
-<div class="h-screen w-auto flex flex-col">
+<div class="h-auto w-screen flex flex-col">
 
     <!-- Hack club picture -->
      <a href="https://hackclub.com/" class="pointer-events-auto" target="_blank" rel="Link to Hack Club website">
@@ -34,7 +34,7 @@
                 <Image 
                     src={cubed} 
                     alt="Project Logo" 
-                    class="w-[80vw] lg:w-[50vw] md:w-[65vw] sm:w-[75vw] h-auto hover:scale-[1.04] transition-all duration-300 pointer-events-auto"
+                    class="w-[80vw] lg:w-[42.5vw] md:w-[65vw] sm:w-[75vw] h-auto hover:scale-[1.04] transition-all duration-300 pointer-events-auto"
                     loading="eager" 
                 />
             </div>
@@ -48,7 +48,16 @@
 
             <!-- Email and RSVP button -->
             <div class="mt-[3vh] flex flex-col w-screen">
+                <!-- This is the Email + Rsvp, take this out when working on the actual site
                 <HeroRsvp client:load/>
+                 -->
+                    <div class="h-auto w-full flex flex-row justify-center gap-4 pointer-events-auto">
+                        <button
+                        class="bg-white  text-gray-500 outline-4 outline-black/15 max-w-[20vw] px-[1vw] py-[1vh] font-light text-2xl "
+                        >
+                            Rsvp coming soon...
+                        </button>
+                    </div>
             </div>
         </div>
     </div>

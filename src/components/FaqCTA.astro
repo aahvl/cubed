@@ -1,0 +1,46 @@
+---
+const faqs = [
+  {
+    question: "What is Cubed?",
+    answer: "Cubed is a free online summer program for creative teens aged 13–18. Build any science-related project you want — calculators, simulations, hardware — log your hours, and earn cool prizes!"
+  },
+  {
+    question: "Do I need experience?",
+    answer: "Absolutely not! Guides and a community of over 100,000 teens are there to help you get started. 0 experience needed."
+  },
+  {
+    question: "What prizes can I earn?",
+    answer: "Prizes include posters, Rubik's cubes, stickers, calculators, and more! The more you build, the more you earn."
+  },
+  {
+    question: "Is it really free?",
+    answer: "Yes! It's 100% free. All prizes are donated or paid for by us. There are no hidden fees."
+  },
+  {
+    question: "How long does the program last?",
+    answer: "Cubed runs through the summer. You work at your own pace on your project and log hours as you go."
+  },
+  {
+    question: "What kind of projects can I build?",
+    answer: "Anything science-related! Calculators, simulations, hardware hacks, data visualizations, experiments — if it involves science and creativity, it counts."
+  }
+]
+---
+
+<section class="relative flex flex-col bg-[#F9FFFF] w-screen py-12 px-4 md:px-8">
+    <h1 class="text-4xl md:text-6xl font-bold text-center mb-10">Frequently Asked Questions</h1>
+
+    <div class="max-w-3xl mx-auto w-full flex flex-col gap-4">
+        {faqs.map((faq) => (
+            <details class="group border-b border-black/20">
+                <summary class="flex items-center justify-between cursor-pointer py-4 px-2 text-lg md:text-xl font-medium list-none hover:bg-black/5 transition-colors rounded-lg">
+                    <span>{faq.question}</span>
+                    <span class="transition-transform duration-300 group-open:rotate-45 text-2xl ml-4 shrink-0">+</span>
+                </summary>
+                <div class="pb-4 px-2 text-black/70 text-base md:text-lg leading-relaxed">
+                    {faq.answer}
+                </div>
+            </details>
+        ))}
+    </div>
+</section>

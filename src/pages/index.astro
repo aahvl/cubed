@@ -3,21 +3,49 @@
     import HexagonBackground from '../components/HexagonBackground.svelte'
 	import Hero from '../components/Hero.astro'
 	import EdgeCubes from '../components/EdgeCubes.svelte'
+    import WhatContentLandingAstroComponent from '../components/WhatContentLanding.astro';
+    import FaqCTA from '../components/FaqCTA.astro';
+    import { Image } from "astro:assets";
+    import explosivePB from "../Images/explosivePb.png"
 ---
 
 <Layout>
-    <main class="relative h-screen overflow-hidden">
-        <!--Background -->
-		<div class="fixed inset-0">
-        <HexagonBackground client:load />
-		</div>
+    <main class="relative flex flex-col">
 
-        <!-- 3D edge cubes -->
-        <EdgeCubes client:load />
+        <!-- Hero/first part of the landing page -->
+        <div class="relative h-[102.5vh]">
+            <!--Background -->
+            <div class="fixed inset-0">
+            <HexagonBackground client:load />
+            </div>
 
-        <!-- Content -->
-        <div class="relative z-10 flex flex-col pointer-events-none">
-			<Hero/>
+            <!-- 3D edge cubes -->
+            <EdgeCubes client:load />
+
+            <!-- Content -->
+            <div class="relative z-10 flex flex-col pointer-events-none h-screen">
+                <Hero/>
+            </div>
+
+            <!-- Page breaker at bottom of hero --> <!-- tailwind ultilties to make it centered bottom-0 left-1/2 transform -translate-x-1/2  -->
+            <div class="absolute bottom-0 right-0 z-5 hidden lg:block">
+                <Image 
+                    src={explosivePB} 
+                    alt="Page breaker"
+                    width={700} 
+                    height={700}
+                    class="w-auto h-[75vh] block"
+                />
+            </div>
         </div>
+
+        <!--Second part of the landing page - red bg directly under page breaker-->
+        <div class="relative z-30 w-screen flex flex-col">
+            <WhatContentLandingAstroComponent/>
+        </div>
+        <div class="relative z-30 w-screen flex flex-col">
+            <FaqCTA/>
+        </div>
+
     </main>
 </Layout>

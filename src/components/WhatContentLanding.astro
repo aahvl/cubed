@@ -1,0 +1,112 @@
+---
+    import { Image } from "astro:assets";
+    import colorfulPB from "../Images/colorfulPB.svg";
+    import orphAwe from "../Images/orphAwe.png";
+    import prize1 from "../Images/prize1Poster.png";
+    import prize2 from "../Images/prize2Rubix.png";
+    import prize3 from "../Images/prize3tungtung.png";
+    import prize4 from "../Images/prize4calc.png";
+    import prize5 from "../Images/prize5tita.png";
+    import prize6 from "../Images/prize6sticker.png";
+---
+
+<section class="relative flex flex-col bg-[#F9FFFF]">
+    <div>
+        <Image 
+                src={colorfulPB} 
+                alt="colorful page breaker"
+                width={300} 
+                height={300}
+                class="w-screen h-auto"
+                />
+    </div>
+    <!--Orph -->
+    <div class="absolute top-[15vh] left-[12vw]">
+        <Image 
+                src={orphAwe} 
+                alt="orphoues in awe"
+                width={300} 
+                height={300}
+                class="w-auto h-15vh"
+                />
+    </div>
+
+    <!-- Prizes!!  -->
+
+    <div class="absolute top-[55vh] left-[10vw] transform -rotate-3">
+        <Image 
+                src={prize1} 
+                alt="Prize"
+                width={420} 
+                height={420}
+                class="w-auto h-13vh"
+                />
+    </div>
+
+    <div class="absolute bottom-[9vh] left-[20vw] transform rotate-3">
+        <Image 
+                src={prize2} 
+                alt="Prize"
+                width={300} 
+                height={300}
+                class="w-auto h-10vh"
+                />
+    </div>
+
+    <div class="absolute bottom-[11vh] left-[42vw] transform rotate-1">
+        <Image 
+                src={prize3} 
+                alt="Prize"
+                width={300} 
+                height={300}
+                class="w-auto h-11vh"
+                />
+    </div>
+    <div class="absolute bottom-[12vh] left-[65vw] transform -rotate-3">
+        <Image 
+                src={prize4} 
+                alt="Prize"
+                width={300} 
+                height={300}
+                class="w-auto h-9vh"
+                />
+    </div>
+
+    <div class="absolute bottom-[14vh] left-[85vw] transform -rotate-4">
+        <Image 
+                src={prize5} 
+                alt="Prize"
+                width={300} 
+                height={300}
+                class="w-auto h-12vh"
+                />
+    </div>
+
+    <div class="absolute bottom-[35vh] left-[80vw] transform rotate-4">
+        <Image 
+                src={prize6} 
+                alt="Prize"
+                width={300} 
+                height={300}
+                class="w-auto h-12vh"
+                />
+    </div>
+    
+    <!-- Content -->
+
+    <div class="h-[95vh] flex flex-col items-center ">
+        <h1 class="text-[7vh] font-mono text-black mt-[7.5vh]  text-center">Wait, what is CUBed???</h1>
+        <div class="w-[30vw] h-[35vh] bg-[#92B6EA] shadow-[16px_10px_4px_-1px_rgba(0,0,0,0.5)] shadow-black/30 mt-[7.5vh] flex flex-col items-center justify-center">
+            <p class="font-mono text-[2.5vh] text-center font-bold px-[2.5vw] py-[2.5vw] mx-auto my-auto">
+                Cubed is a free online summer program for creative teens aged 13–18.
+                 Build any science related project you want (calculators, simulations, hardware), 
+                 log your hours, and earn cool prizes! 
+            </p>
+        </div>
+        <p class="text-gray-700 text-[2vh] text-center mt-auto mb-[2vh]"> 
+            Absolutely 0 experience needed. Guides and a community of over 100,000 teens are there to help you get started.
+        </p>
+    </div>
+</section>
+        <!-- Page breaker -->
+        <div class="bg-[#1A1A1A] w-screen h-2"></div>
