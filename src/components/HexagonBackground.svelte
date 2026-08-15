@@ -316,8 +316,8 @@
   }
 
   function onPointerMove(e: PointerEvent) {
-    if (!canvasEl) return
-    const rect = canvasEl.getBoundingClientRect()
+    if (!containerEl) return
+    const rect = containerEl.getBoundingClientRect()
     const px = e.clientX - rect.left
     const py = e.clientY - rect.top
     const idx = pickHex(px, py)
@@ -365,9 +365,9 @@
       attributeFilter: ['class'],
     })
 
-    canvasEl.addEventListener('pointermove', onPointerMove)
-    canvasEl.addEventListener('pointerleave', onPointerLeave)
-    canvasEl.addEventListener('pointercancel', onPointerLeave)
+    containerEl.addEventListener('pointermove', onPointerMove)
+    containerEl.addEventListener('pointerleave', onPointerLeave)
+    containerEl.addEventListener('pointercancel', onPointerLeave)
 
     return () => {
       window
@@ -375,9 +375,9 @@
         .removeEventListener('change', onMotion)
       observer.disconnect()
       themeObserver.disconnect()
-      canvasEl?.removeEventListener('pointermove', onPointerMove)
-      canvasEl?.removeEventListener('pointerleave', onPointerLeave)
-      canvasEl?.removeEventListener('pointercancel', onPointerLeave)
+      containerEl?.removeEventListener('pointermove', onPointerMove)
+      containerEl?.removeEventListener('pointerleave', onPointerLeave)
+      containerEl?.removeEventListener('pointercancel', onPointerLeave)
       running = false
       cancelAnimationFrame(raf)
       baseCanvas = null
@@ -412,7 +412,7 @@
   .hexagon-canvas {
     position: absolute;
     inset: 0;
-    pointer-events: auto;
+    pointer-events: none;
     cursor: default;
   }
 </style>
