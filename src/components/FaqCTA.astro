@@ -31,12 +31,12 @@
 ---
 
 <section class="relative flex flex-col bg-[#F9FFFF] w-screen py-12 px-4 md:px-8">
-    <h1 class="text-4xl md:text-6xl font-bold text-center mb-10 hover:scale-[1.04] hover:mb-12 transition-all duration-300 ">Frequently Asked Questions</h1>
+    <h1 class="text-4xl md:text-6xl font-anta font-bold text-center mb-10 hover:scale-[1.04] hover:mb-12 transition-all duration-300 ">Frequently Asked Questions</h1>
 
     <div class="max-w-3xl mx-auto w-full flex flex-col gap-4">
         {faqs.map((faq) => (
             <details class="group border-b border-black/20">
-                <summary class="flex items-center justify-between cursor-pointer py-4 px-2 text-lg md:text-xl font-medium list-none hover:bg-black/5 transition-colors rounded-lg">
+                <summary class="flex items-center justify-between cursor-pointer py-4 px-2 text-lg md:text-xl font-anta font-medium list-none hover:bg-black/5 transition-colors rounded-lg">
                     <span>{faq.question}</span>
                     <span class="transition-transform duration-300 group-open:rotate-45 text-2xl ml-4 shrink-0">+</span>
                 </summary>
@@ -49,7 +49,7 @@
 
 
     <div class=" mt-[15vh] h-[40vh]">
-      <h2  class="text-center text-[6vh] font-bold tracker-wide hover:scale-[1.04] transition-all duration-300 "> Coming soon</h2>
+      <h2  class="text-center text-[6vh] font-anta font-bold tracker-wide hover:scale-[1.04] transition-all duration-300 "> Coming soon</h2>
       <h5 class="text-gray-600 text-center text-[3vh]"> {heading_text} </h5>
       <div class="mt-[3vh] flex flex-col w-screen">
         <HeroRsvp client:load/>

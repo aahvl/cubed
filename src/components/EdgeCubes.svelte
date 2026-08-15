@@ -116,9 +116,16 @@
     const count = isDesktop ? DESKTOP_COUNT : MOBILE_COUNT
     const positions = isDesktop ? DESKTOP_POSITIONS : MOBILE_POSITIONS
 
+    // Randomly shuffle material order so each slot gets a random texture each load
+    const shuffled = [...materials]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+
     for (let i = 0; i < count; i++) {
       const geometry = new BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE)
-      const material = materials[i % materials.length]
+      const material = shuffled[i % shuffled.length]
       const mesh = new Mesh(geometry, material)
 
       const pos = positions[i]

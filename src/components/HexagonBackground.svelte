@@ -116,6 +116,15 @@
     flex-shrink: 0;
     pointer-events: auto;
     clip-path: var(--clip);
+    position: relative;
+    transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+    z-index: 1;
+  }
+
+  .hexagon:hover {
+    transform: scale(1.15);
+    z-index: 2;
   }
 
   .hex-children {
