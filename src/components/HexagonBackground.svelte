@@ -396,7 +396,7 @@
   <canvas
     bind:this={canvasEl}
     class="hexagon-canvas"
-    style="display: block; touch-action: none;"
+    style="display: block;"
   ></canvas>
 </div>
 
