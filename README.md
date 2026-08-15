@@ -1,2 +1,2 @@
-# cubed
-Website for the Cubed YSWS
+# cubed landing page
+a very very cool ysws
