@@ -5,7 +5,7 @@ const steps = [
     title: "Sign up",
     description: "Sign up using your email and hackclub account. After signing in you can view the dashboard!",
     hex: "#FFFFFF",
-    width: "w-[260px] md:w-[300px]",
+    width: "w-[min(260px,85vw)] md:w-[min(300px,80vw)]",
     py: "py-5",
     align: "self-start",
     margin: "lg:ml-8",
@@ -15,7 +15,7 @@ const steps = [
     title: "Join the Slack",
     description: "Jump into the Hackclub Slack community to ask questions, make friends and talk to other hackclubers",
     hex: "#C0A9F0",
-    width: "w-[240px] md:w-[280px]",
+    width: "w-[min(240px,85vw)] md:w-[min(280px,80vw)]",
     py: "py-7",
     align: "self-end",
     margin: "lg:mr-8",
@@ -25,7 +25,7 @@ const steps = [
     title: "Make your project",
     description: "Build your super cool science project, and track your time using hackatime!",
     hex: "#FFE600",
-    width: "w-[300px] md:w-[340px]",
+    width: "w-[min(300px,85vw)] md:w-[min(340px,80vw)]",
     py: "py-4",
     align: "self-start",
     margin: "lg:ml-16",
@@ -35,7 +35,7 @@ const steps = [
     title: "Get Prizes",
     description: "Ship and submit your project and awesome prizes will be sent your way!",
     hex: "#86E3CE",
-    width: "w-[220px] md:w-[260px]",
+    width: "w-[min(220px,85vw)] md:w-[min(260px,80vw)]",
     py: "py-6",
     align: "self-end",
     margin: "lg:mr-16",
@@ -43,7 +43,7 @@ const steps = [
 ]
 ---
 
-<section class="relative w-screen min-h-[80vh] lg:h-[80vh] bg-[var(--c-bg-2)] overflow-hidden px-4 md:px-12">
+<section class="relative w-screen min-h-[80vh] bg-[var(--c-bg-2)] overflow-x-clip px-4 md:px-12">
     <div class="max-w-7xl mx-auto h-full flex flex-col lg:flex-row items-center gap-4 lg:gap-10">
 
         <!-- Title -->
@@ -54,7 +54,7 @@ const steps = [
         </div>
 
         <!-- Boxes with steps -->
-        <div class="lg:w-2/3 h-full relative flex flex-col justify-between gap-8 py-5 md:py-10 lg:gap-0">
+        <div class="lg:w-2/3 lg:min-h-[80vh] relative flex flex-col justify-between gap-8 py-5 md:py-10 lg:gap-0">
             {steps.map((step, i) => (
                 <div class={`relative ${step.align} ${step.margin} flex items-center gap-4 md:gap-6`}>
                     {i % 2 === 1 && i < steps.length - 1 && (
