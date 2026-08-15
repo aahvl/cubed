@@ -5,6 +5,7 @@
     BoxGeometry,
     Color,
     DirectionalLight,
+    Euler,
     Group,
     MathUtils,
     Mesh,
@@ -133,10 +134,12 @@
 
       // Random initial orientation (subtle tilt)
       mesh.quaternion.setFromEuler(
-        (Math.random() - 0.5) * Math.PI * 0.4,
-        (Math.random() - 0.5) * Math.PI * 0.4,
-        (Math.random() - 0.5) * Math.PI * 0.4,
-        'XYZ'
+        new Euler(
+          (Math.random() - 0.5) * Math.PI * 0.4,
+          (Math.random() - 0.5) * Math.PI * 0.4,
+          (Math.random() - 0.5) * Math.PI * 0.4,
+          'XYZ'
+        )
       )
 
       group.add(mesh)
