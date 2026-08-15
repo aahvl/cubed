@@ -21,7 +21,7 @@
                 />
     </div>
     <!--Orph -->
-    <div class="absolute top-[15vh] left-[12vw] hover:scale-[1.06] hover:-rotate-9 transition-all duration-300 ">
+    <div class="z-0 absolute top-[15vh] left-[12vw] hover:scale-[1.06] hover:-rotate-9 transition-all duration-300 hidden lg:block">
         <Image 
                 src={orphAwe} 
                 alt="orphoues in awe"
@@ -33,7 +33,7 @@
 
     <!-- Prizes!!  -->
 
-    <div class="absolute top-[55vh] left-[10vw] prize prize1">
+    <div class="absolute top-[55vh] left-[10vw] prize prize1 hidden lg:block">
         <Image 
                 src={prize1} 
                 alt="Prize"
@@ -43,7 +43,7 @@
                 />
     </div>
 
-    <div class="absolute bottom-[9vh] left-[20vw] prize prize2">
+    <div class="absolute bottom-[9vh] left-[20vw] prize prize2 hidden lg:block">
         <Image 
                 src={prize2} 
                 alt="Prize"
@@ -53,7 +53,7 @@
                 />
     </div>
 
-    <div class="absolute bottom-[6vh] left-[42vw] prize prize3">
+    <div class="absolute bottom-[6vh] left-[42vw] prize prize3 hidden lg:block">
         <Image 
                 src={prize3} 
                 alt="Prize"
@@ -62,7 +62,7 @@
                 class="w-auto h-11vh"
                 />
     </div>
-    <div class="absolute bottom-[12vh] left-[65vw] prize prize4">
+    <div class="absolute bottom-[12vh] left-[65vw] prize prize4 hidden lg:block">
         <Image 
                 src={prize4} 
                 alt="Prize"
@@ -72,7 +72,7 @@
                 />
     </div>
 
-    <div class="absolute bottom-[14vh] left-[85vw] prize prize5">
+    <div class="absolute bottom-[14vh] left-[85vw] prize prize5 hidden lg:block">
         <Image 
                 src={prize5} 
                 alt="Prize"
@@ -82,7 +82,7 @@
                 />
     </div>
 
-    <div class="absolute bottom-[35vh] left-[80vw] prize prize6">
+    <div class="absolute bottom-[35vh] left-[80vw] prize prize6 hidden lg:block">
         <Image 
                 src={prize6} 
                 alt="Prize"
@@ -94,16 +94,16 @@
     
     <!-- Content -->
 
-    <div class="h-[95vh] flex flex-col items-center ">
-        <h1 class="text-[7vh] font-anta text-black mt-[7.5vh]  text-center hover:scale-[1.04] transition-all duration-300 ">Wait, what is CUBed???</h1>
-        <div class="w-[30vw] h-[35vh] bg-[#92B6EA] shadow-[16px_10px_4px_-1px_rgba(0,0,0,0.5)] shadow-black/30 mt-[7.5vh] flex flex-col items-center justify-center">
-            <p class="font-mono text-[2.5vh] text-center font-bold px-[2.5vw] py-[2.5vw] mx-auto my-auto">
+    <div class="z-10 h-[95vh] flex flex-col items-center px-4 md:px-0">
+        <h1 class="text-[9vw] md:text-[7vh] font-anta text-black mt-[7.5vh] text-center hover:scale-[1.04] transition-all duration-300">Wait, what is Cubed???</h1>
+        <div class="w-[90vw] md:w-[30vw] h-auto md:h-[35vh] min-h-[30vh] bg-[#92B6EA] shadow-[16px_10px_4px_-1px_rgba(0,0,0,0.5)] shadow-black/30 mt-[7.5vh] flex flex-col items-center justify-center">
+            <p class="font-mono text-[3.5vw] md:text-[2vh] text-center font-bold px-[5vw] md:px-[2.5vw] py-[5vw] md:py-[2.5vw] mx-auto my-auto">
                 Cubed is a free online summer program for creative teens aged 13–18.
                  Build any science related project you want (calculators, simulations, websites), 
                  log your hours, and earn cool prizes! 
             </p>
         </div>
-        <p class="text-gray-700 text-[2vh] text-center mt-auto mb-[2vh]"> 
+        <p class="max-w-[90vw] text-gray-700 text-[2.5vw] md:text-[1.75vh] text-center mt-auto mb-[2vh] px-[4vw] md:px-0"> 
             Absolutely 0 experience needed. Guides and a community of over 100,000 teens are there to help you get started.
         </p>
     </div>
