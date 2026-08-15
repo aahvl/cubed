@@ -5,6 +5,8 @@
 	import EdgeCubes from '../components/EdgeCubes.svelte'
     import WhatContentLandingAstroComponent from '../components/WhatContentLanding.astro';
     import FaqCTA from '../components/FaqCTA.astro';
+    import HowToJoin from '../components/HowToJoin.astro'
+    import Footer from '../components/Footer.astro'
     import { Image } from "astro:assets";
     import explosivePB from "../Images/explosivePb.png"
 ---
@@ -13,7 +15,7 @@
     <main class="relative flex flex-col">
 
         <!-- Hero/first part of the landing page -->
-        <div class="relative h-[102.5vh]">
+        <div class="relative h-[99vh]">
             <!--Background -->
             <div class="fixed inset-0">
             <HexagonBackground client:load />
@@ -26,17 +28,6 @@
             <div class="relative z-10 flex flex-col pointer-events-none h-screen">
                 <Hero/>
             </div>
-
-            <!-- Page breaker at bottom of hero --> <!-- tailwind ultilties to make it centered bottom-0 left-1/2 transform -translate-x-1/2  -->
-            <div class="absolute bottom-0 right-0 z-5 hidden lg:block">
-                <Image 
-                    src={explosivePB} 
-                    alt="Page breaker"
-                    width={700} 
-                    height={700}
-                    class="w-auto h-[75vh] block"
-                />
-            </div>
         </div>
 
         <!--Second part of the landing page - red bg directly under page breaker-->
@@ -44,8 +35,25 @@
             <WhatContentLandingAstroComponent/>
         </div>
         <div class="relative z-30 w-screen flex flex-col">
+            <HowToJoin/>
+                        <!-- Page breaker at bottom of hero --> <!-- tailwind ultilties to make it centered bottom-0 left-1/2 transform -translate-x-1/2  -->
+            <div class="absolute bottom-0 -left-8 z-5 hidden lg:block  overflow-hidden">
+                <Image 
+                    src={explosivePB} 
+                    alt="Page breaker"
+                    width={760} 
+                    height={600}
+                    class="w-auto h-[55vh]"
+                />
+            </div>
+        </div>
+        <div class="relative z-30 w-screen flex flex-col">
             <FaqCTA/>
         </div>
+        <div class="relative z-30 w-screen flex flex-col">
+            <Footer/>
+        </div>
+
 
     </main>
 </Layout>
