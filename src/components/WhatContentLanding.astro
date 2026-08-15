@@ -10,7 +10,7 @@
     import prize6 from "../Images/prize6sticker.png";
 ---
 
-<section class="relative flex flex-col bg-[#F9FFFF]">
+<section class="relative flex flex-col bg-[var(--c-bg-1)]">
     <div>
         <Image 
                 src={colorfulPB} 
@@ -21,7 +21,7 @@
                 />
     </div>
     <!--Orph -->
-    <div class="z-0 absolute top-[15vh] left-[12vw] hover:scale-[1.06] hover:-rotate-9 transition-all duration-300 hidden lg:block">
+    <div class="z-0 absolute top-[15vh] left-[12vw] prize orph hidden lg:block">
         <Image 
                 src={orphAwe} 
                 alt="orphoues in awe"
@@ -94,49 +94,56 @@
     
     <!-- Content -->
 
-    <div class="z-10 h-[95vh] flex flex-col items-center px-4 md:px-0">
-        <h1 class="text-[9vw] md:text-[7vh] font-anta text-black mt-[7.5vh] text-center hover:scale-[1.04] transition-all duration-300">Wait, what is Cubed???</h1>
-        <div class="w-[90vw] md:w-[30vw] h-auto md:h-[35vh] min-h-[30vh] bg-[#92B6EA] shadow-[16px_10px_4px_-1px_rgba(0,0,0,0.5)] shadow-black/30 mt-[7.5vh] flex flex-col items-center justify-center">
+    <div class="z-10 h-[95vh] flex flex-col items-center px-4 md:px-0 pointer-events-none">
+        <h1 class="text-[9vw] md:text-[7vh] font-anta text-black mt-[7.5vh] text-center pointer-events-auto hover:scale-[1.04] transition-transform duration-300 ease-in-out">Wait, what is Cubed???</h1>
+        <div class="w-[90vw] md:w-[30vw] h-auto md:h-[35vh] min-h-[30vh] bg-[var(--c-info-box)] shadow-[16px_10px_4px_-1px_rgba(0,0,0,0.5)] shadow-black/30 mt-[7.5vh] flex flex-col items-center justify-center">
             <p class="font-mono text-[3.5vw] md:text-[2vh] text-center font-bold px-[5vw] md:px-[2.5vw] py-[5vw] md:py-[2.5vw] mx-auto my-auto">
                 Cubed is a free online summer program for creative teens aged 13–18.
                  Build any science related project you want (calculators, simulations, websites), 
                  log your hours, and earn cool prizes! 
             </p>
         </div>
-        <p class="max-w-[90vw] text-gray-700 text-[2.5vw] md:text-[1.75vh] text-center mt-auto mb-[2vh] px-[4vw] md:px-0"> 
+        <p class="max-w-[90vw] text-black text-[2.5vw] md:text-[1.75vh] text-center mt-auto mb-[2vh] px-[4vw] md:px-0"> 
             Absolutely 0 experience needed. Guides and a community of over 100,000 teens are there to help you get started.
         </p>
     </div>
 </section>
         <!-- Page breaker -->
-        <div class="bg-[#1A1A1A] w-screen h-2"></div>
+        <div class="bg-[var(--c-divider)] w-screen h-2"></div>
 
 <style>
     .prize {
-        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* Springy overshoot so it bounces/recoils when you hover */
+        transition: transform 0.4s cubic-bezier(0.34, 1.8, 0.64, 1);
         cursor: pointer;
+        pointer-events: auto;
+        will-change: transform;
     }
-    /* prize1: base -rotate-3 → hover +3deg */
+    /* prize1: base -rotate-3 → hover +4deg */
     .prize1 { transform: rotate(-3deg); }
-    .prize1:hover { transform: scale(1.1) rotate(3deg); }
+    .prize1:hover { transform: scale(1.15) rotate(4deg); }
 
-    /* prize2: base rotate-3 → hover -3deg */
+    /* prize2: base rotate-3 → hover -4deg */
     .prize2 { transform: rotate(3deg); }
-    .prize2:hover { transform: scale(1.1) rotate(-3deg); }
+    .prize2:hover { transform: scale(1.15) rotate(-4deg); }
 
-    /* prize3: base rotate-1 → hover -1deg */
+    /* prize3: base rotate-1 → hover -4deg */
     .prize3 { transform: rotate(1deg); }
-    .prize3:hover { transform: scale(1.1) rotate(-1deg); }
+    .prize3:hover { transform: scale(1.15) rotate(-4deg); }
 
-    /* prize4: base -rotate-3 → hover +3deg */
+    /* prize4: base -rotate-3 → hover +4deg */
     .prize4 { transform: rotate(-3deg); }
-    .prize4:hover { transform: scale(1.1) rotate(3deg); }
+    .prize4:hover { transform: scale(1.15) rotate(4deg); }
 
     /* prize5: base -rotate-4 → hover +4deg */
     .prize5 { transform: rotate(-4deg); }
-    .prize5:hover { transform: scale(1.1) rotate(4deg); }
+    .prize5:hover { transform: scale(1.15) rotate(4deg); }
 
     /* prize6: base rotate-4 → hover -4deg */
     .prize6 { transform: rotate(4deg); }
-    .prize6:hover { transform: scale(1.1) rotate(-4deg); }
+    .prize6:hover { transform: scale(1.15) rotate(-4deg); }
+
+    /* orph sticker: same bouncy treatment */
+    .orph { transform: rotate(-2deg); }
+    .orph:hover { transform: scale(1.15) rotate(5deg); }
 </style>

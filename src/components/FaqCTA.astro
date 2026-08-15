@@ -30,17 +30,17 @@
   ]
 ---
 
-<section class="relative flex flex-col bg-[#F9FFFF] w-screen py-12 px-4 md:px-8">
-    <h1 class="text-4xl md:text-6xl font-anta font-bold text-center mb-10 hover:scale-[1.04] hover:mb-12 transition-all duration-300 ">Frequently Asked Questions</h1>
+<section class="relative flex flex-col bg-[var(--c-bg-3)] w-screen py-12 px-4 md:px-8">
+    <h1 class="text-4xl md:text-6xl font-anta font-bold text-center mb-10 hover:scale-[1.04] hover:mb-12 transition-all duration-300 text-[var(--c-text)]">Frequently Asked Questions</h1>
 
     <div class="max-w-[50vw] lg:max-w-[35vw] mx-auto w-full flex flex-col gap-4">
         {faqs.map((faq) => (
-            <details class="group border-b border-black/20">
-                <summary class="flex items-center justify-between cursor-pointer py-4 px-2 text-base md:text-xl font-anta font-medium list-none hover:bg-black/5 transition-colors rounded-lg">
-                    <span class="break-words pr-2">{faq.question}</span>
-                    <span class="transition-transform duration-300 group-open:rotate-45 text-2xl ml-1 shrink-0">+</span>
+            <details class="group border-b [border-color:var(--c-border)]">
+                <summary class="flex items-center justify-between cursor-pointer py-4 px-2 text-base md:text-xl font-anta font-medium list-none hover:bg-[var(--c-hover)] transition-colors rounded-lg">
+                    <span class="break-words pr-2 text-[var(--c-text)]">{faq.question}</span>
+                    <span class="transition-transform duration-300 group-open:rotate-45 text-2xl ml-1 shrink-0 text-[var(--c-text)]">+</span>
                 </summary>
-                <div class="pb-4 px-2 text-black/70 text-sm md:text-lg leading-relaxed break-words">
+                <div class="pb-4 px-2 text-[var(--c-text-2)] text-sm md:text-lg leading-relaxed break-words">
                     {faq.answer}
                 </div>
             </details>
@@ -49,8 +49,8 @@
 
 
     <div class="mt-[15vh] h-auto md:h-[40vh] min-h-[40vh] px-4 md:px-0">
-      <h2 class="max-w-[90vw] text-center text-[8vw] md:text-[6vh] font-anta font-bold tracker-wide hover:scale-[1.04] transition-all duration-300"> Coming soon</h2>
-      <h5 class="max-w-[90vw] text-gray-600 text-center text-[4vw] md:text-[3vh] mt-2 md:mt-0"> {heading_text} </h5>
+      <h2 class="max-w-[90vw] text-center text-[8vw] md:text-[6vh] font-anta font-bold tracker-wide hover:scale-[1.04] transition-all duration-300 text-[var(--c-text)]"> Coming soon</h2>
+      <h5 class="max-w-[90vw] text-[var(--c-text-3)] text-center text-[4vw] md:text-[3vh] mt-2 md:mt-0"> {heading_text} </h5>
       <div class="mt-[3vh] flex flex-col items-center w-full mx-auto">
         <HeroRsvp client:load/>
       </div>
