@@ -43,7 +43,7 @@ const steps = [
 ]
 ---
 
-<section class="relative w-screen h-[80vh] bg-[#FFFAD0] overflow-hidden px-4 md:px-12">
+<section class="relative w-screen min-h-[80vh] lg:h-[80vh] bg-[var(--c-bg-2)] overflow-hidden px-4 md:px-12">
     <div class="max-w-7xl mx-auto h-full flex flex-col lg:flex-row items-center gap-4 lg:gap-10">
 
         <!-- Title -->
@@ -54,23 +54,23 @@ const steps = [
         </div>
 
         <!-- Boxes with steps -->
-        <div class="lg:w-2/3 h-full relative flex flex-col justify-between py-5 md:py-10">
+        <div class="lg:w-2/3 h-full relative flex flex-col justify-between gap-8 py-5 md:py-10 lg:gap-0">
             {steps.map((step, i) => (
                 <div class={`relative ${step.align} ${step.margin} flex items-center gap-4 md:gap-6`}>
                     {i % 2 === 1 && i < steps.length - 1 && (
-                        <svg class="w-16 md:w-24 h-10 md:h-16 text-[#8B0000] shrink-0 hidden md:block" viewBox="0 0 80 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-16 md:w-24 h-10 md:h-16 text-[var(--c-arrow)] shrink-0 hidden md:block" viewBox="0 0 80 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M76 10 C44 10, 32 24, 8 32" />
                             <path d="M18 24 L6 32 L20 40" />
                         </svg>
                     )}
 
                     <div class={`${step.width} ${step.py} px-2 rounded-lg border-3 border-black`} style={`background-color: ${step.hex}`}>
-                        <h3 class="text-xl md:text-2xl font-anta font-bold mb-2">{step.number}. {step.title}</h3>
-                        <p class="text-sm md:text-base text-black/80">{step.description}</p>
+                        <h3 class="text-xl md:text-2xl font-anta font-bold mb-2 text-black">{step.number}. {step.title}</h3>
+                        <p class="text-sm md:text-base text-black">{step.description}</p>
                     </div>
 
                     {i % 2 === 0 && (
-                        <svg class="w-16 md:w-24 h-10 md:h-16 text-[#8B0000] shrink-0 hidden md:block" viewBox="0 0 80 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-16 md:w-24 h-10 md:h-16 text-[var(--c-arrow)] shrink-0 hidden md:block" viewBox="0 0 80 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 10 C36 10, 48 24, 72 32" />
                             <path d="M62 24 L74 32 L60 40" />
                         </svg>
@@ -81,4 +81,4 @@ const steps = [
     </div>
 </section>
 <!-- Page breaker -->
-<div class="bg-[#5f1616] w-screen h-2"></div>
+<div class="bg-[var(--c-divider-2)] w-screen h-2"></div>
