@@ -1,0 +1,254 @@
+---
+// Read-only, server rendered
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { serverApiFetch } from "../../lib/api";
+
+const res = await serverApiFetch(Astro.request, "/admin/analytics?days=30");
+const data = res.ok
+  ? await res.json()
+  : {
+      signupsPerDay: [],
+      heardAbout: [],
+      heardAboutResponses: [],
+      projectsByStatus: [],
+      review: { approved: 0, rejected: 0, pending: 0, approvalRate: null, totalHoursFunded: 0, avgApprovedHours: 0 },
+      economy: { totalEarned: 0, totalSpent: 0, totalOutstanding: 0, totalOrders: 0, totalUnitsOrdered: 0 },
+      topShopItems: [],
+      onboarding: { totalUsers: 0, onboardedCount: 0 },
+    };
+
+const maxSignups = Math.max(1, ...data.signupsPerDay.map((d: any) => d.count));
+
+function statusColor(status: string) {
+  switch (status) {
+    case "approved":
+      return "bg-app-mint";
+    case "rejected":
+      return "bg-app-orange";
+    case "submitted":
+      return "bg-app-lavender";
+    default:
+      return "bg-white";
+  }
+}
+
+const HEARD_ABOUT_LABELS: Record<string, string> = {
+  friends_family: "Friends/Family",
+  instagram_youtube: "Instagram/YouTube",
+  hackclub_site: "Hack Club site",
+  slack: "Slack",
+  email: "Email",
+  school: "School",
+  other: "Other",
+};
+
+const HEARD_ABOUT_COLORS: Record<string, string> = {
+  friends_family: "bg-app-mint",
+  instagram_youtube: "bg-app-lavender",
+  hackclub_site: "bg-app-gold",
+  slack: "bg-app-orange",
+  email: "bg-app-yellow",
+  school: "bg-[#8a6d4f]",
+  other: "bg-black/20",
+};
+const HEARD_ABOUT_ORDER = ["slack", "friends_family", "instagram_youtube", "hackclub_site", "email", "school", "other"];
+
+const heardAboutTotal = data.heardAbout.reduce((sum: number, r: any) => sum + r.count, 0) || 1;
+const heardAboutSorted = [...data.heardAbout].sort(
+  (a: any, b: any) => HEARD_ABOUT_ORDER.indexOf(a.source) - HEARD_ABOUT_ORDER.indexOf(b.source),
+);
+
+const totalMoles = data.economy.totalEarned + data.economy.totalSpent || 1;
+const onboardedPct = data.onboarding.totalUsers
+  ? Math.round((data.onboarding.onboardedCount / data.onboarding.totalUsers) * 100)
+  : 0;
+---
+
+<AdminLayout title="Analytics" requireAdmin>
+  <a
+    href="/admin"
+    class="mb-6 inline-block w-fit rounded-none border-2 border-[#5c4429] bg-[#f0e2c9]/90 px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#4a3220] backdrop-blur-sm transition-all hover:bg-[#e4d1ac]"
+  >
+    &larr; Back to Admin
+  </a>
+
+  <h1 class="mb-8 text-3xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Analytics</h1>
+
+  <section class="mb-10">
+    <h2 class="mb-1 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Signups</h2>
+    <p class="mb-4 text-sm text-black/60">New accounts per day, last 30 days.</p>
+    <div class="rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-5">
+      <div class="flex h-40 items-end gap-1">
+        {data.signupsPerDay.map((d: any) => (
+          <div
+            class="group relative flex-1"
+            title={`${d.date}: ${d.count} signup${d.count === 1 ? "" : "s"}`}
+          >
+            <div
+              class="w-full rounded-t bg-app-mint transition-all group-hover:bg-app-gold"
+              style={`height: ${Math.max(3, (d.count / maxSignups) * 100)}%`}
+            />
+          </div>
+        ))}
+      </div>
+      <div class="mt-2 flex justify-between text-[10px] text-black/40">
+        <span>{data.signupsPerDay[0]?.date}</span>
+        <span>{data.signupsPerDay[data.signupsPerDay.length - 1]?.date}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-1 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">How people heard about Cubed</h2>
+    <p class="mb-4 text-sm text-black/60">From onboarding step 3.</p>
+
+    <div class="mb-6 rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-5">
+      {heardAboutSorted.length === 0 ? (
+        <p class="text-sm text-black/50">No responses yet.</p>
+      ) : (
+        <div class="flex flex-col gap-2">
+          {heardAboutSorted.map((r: any) => (
+            <div class="flex items-center gap-3">
+              <span class="w-36 shrink-0 text-xs font-bold uppercase tracking-wide">
+                {HEARD_ABOUT_LABELS[r.source] ?? r.source}
+              </span>
+              <div class="h-4 flex-1 overflow-hidden rounded-full bg-white">
+                <div
+                  class={`h-full rounded-full ${HEARD_ABOUT_COLORS[r.source] ?? "bg-black/20"}`}
+                  style={`width: ${(r.count / heardAboutTotal) * 100}%`}
+                />
+              </div>
+              <span class="w-10 shrink-0 text-right text-xs font-bold">{r.count}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <h3 class="mb-2 text-sm font-bold uppercase tracking-wide text-black/50">
+      "Tell us more" responses ({data.heardAboutResponses.length})
+    </h3>
+    {data.heardAboutResponses.length === 0 ? (
+      <p class="text-sm text-black/50">Nobody's added extra detail yet.</p>
+    ) : (
+      <div class="flex max-h-80 flex-col gap-2 overflow-y-auto">
+        {data.heardAboutResponses.map((r: any) => (
+          <div class="rounded-none border-2 border-[#5c4429]/30 bg-[#e4ecdf] p-3">
+            <div class="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs text-black/50">
+              <span class="font-bold text-black">{r.nickname ?? "?"}</span>
+              <span>{HEARD_ABOUT_LABELS[r.source] ?? r.source} &middot; {new Date(r.createdAt).toLocaleDateString()}</span>
+            </div>
+            <p class="text-sm">{r.detail}</p>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-4 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Projects by status</h2>
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-5">
+      {data.projectsByStatus.map((r: any) => (
+        <div class={`rounded-none border-2 border-[#5c4429] p-4 text-center ${statusColor(r.status)}`}>
+          <p class="text-2xl font-bold">{r.count}</p>
+          <p class="text-xs font-bold uppercase tracking-wide">{r.status.replace("_", " ")}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-1 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Review outcomes</h2>
+    <p class="mb-4 text-sm text-black/60">Pending is the actual review queue — everything else here has already been decided.</p>
+    <div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div class="rounded-none border-2 border-[#5c4429] bg-app-mint p-4 text-center">
+        <p class="text-2xl font-bold">{data.review.approved}</p>
+        <p class="text-xs uppercase tracking-wide text-black/60">Approved</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429] bg-app-orange/50 p-4 text-center">
+        <p class="text-2xl font-bold">{data.review.rejected}</p>
+        <p class="text-xs uppercase tracking-wide text-black/60">Rejected</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429] bg-app-gold/40 p-4 text-center">
+        <p class="text-2xl font-bold">{data.review.pending}</p>
+        <p class="text-xs uppercase tracking-wide text-black/60">Pending review</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div class="rounded-none border-2 border-[#5c4429]/30 bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.review.approvalRate === null ? "—" : `${data.review.approvalRate}%`}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Approval rate</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429]/30 bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.review.totalHoursFunded}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Hours funded</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429]/30 bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.review.avgApprovedHours.toFixed(1)}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Avg hrs / approval</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-4 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Moles economy</h2>
+    <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div class="rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.economy.totalEarned}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Total earned</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.economy.totalSpent}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Total spent</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.economy.totalOutstanding}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Outstanding balance</p>
+      </div>
+      <div class="rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-4 text-center">
+        <p class="text-2xl font-bold">{data.economy.totalOrders}</p>
+        <p class="text-xs uppercase tracking-wide text-black/50">Shop orders ({data.economy.totalUnitsOrdered} items)</p>
+      </div>
+    </div>
+    <div class="h-4 w-full overflow-hidden rounded-full bg-white">
+      <div class="flex h-full">
+        <div class="h-full bg-app-mint" style={`width: ${(data.economy.totalEarned / totalMoles) * 100}%`} title={`Earned: ${data.economy.totalEarned}`} />
+        <div class="h-full bg-app-orange" style={`width: ${(data.economy.totalSpent / totalMoles) * 100}%`} title={`Spent: ${data.economy.totalSpent}`} />
+      </div>
+    </div>
+    <p class="mt-1 text-xs text-black/50">Earned (mint) vs. spent (orange).</p>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-1 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Shop favorites</h2>
+    <p class="mb-4 text-sm text-black/60">Top 5 items by units sold — what to restock or feature.</p>
+    {data.topShopItems.length === 0 ? (
+      <p class="text-sm text-black/50">No orders yet.</p>
+    ) : (
+      <div class="flex flex-col gap-2">
+        {data.topShopItems.map((item: any, i: number) => (
+          <div class="flex flex-wrap items-center justify-between gap-2 rounded-none border-2 border-[#5c4429]/30 bg-[#e4ecdf] px-4 py-3">
+            <span class="flex items-center gap-3">
+              <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-app-gold/50 text-xs font-bold">{i + 1}</span>
+              <span class="font-bold">{item.name}</span>
+            </span>
+            <span class="text-sm text-black/60">{item.unitsSold} sold &middot; {item.molesSpent} moles</span>
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section>
+    <h2 class="mb-4 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Onboarding completion</h2>
+    <div class="rounded-none border-2 border-[#5c4429] bg-[#e4ecdf] p-5">
+      <p class="mb-2 text-sm">
+        <span class="font-bold">{data.onboarding.onboardedCount}</span> of{" "}
+        <span class="font-bold">{data.onboarding.totalUsers}</span> users have completed onboarding ({onboardedPct}%).
+      </p>
+      <div class="h-4 w-full overflow-hidden rounded-full bg-white">
+        <div class="h-full bg-app-gold" style={`width: ${onboardedPct}%`} />
+      </div>
+    </div>
+  </section>
+</AdminLayout>

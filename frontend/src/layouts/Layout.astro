@@ -1,0 +1,30 @@
+---
+import "../styles/global.css";
+import SeoMeta from "../components/SeoMeta.astro";
+
+interface Props {
+  description?: string;
+}
+
+const {
+  description = "Cubed is a free Hack Club YSWS (You Ship, We Ship) program for creative teens aged 13–18. Build any science-related project, log your hours, and earn prizes.",
+} = Astro.props;
+---
+
+
+<html lang="en" class="bg-[var(--c-bg-footer)]">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg" href="/logo.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Anta&display=swap" rel="stylesheet" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Cubed YSWS</title>
+		<SeoMeta title="Cubed YSWS" {description} />
+	</head>
+	<body>
+		<slot></slot>
+	</body>
+</html>

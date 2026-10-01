@@ -1,0 +1,46 @@
+---
+// Everything interactive lives in DashboardRoom.svelte and its popups
+// this file's is just the server-side prefetch every popup
+import DashboardLayout from "../layouts/DashboardLayout.astro";
+import DashboardRoom from "../islands/room/DashboardRoom.svelte";
+import { serverApiFetch } from "../lib/api";
+
+const user = Astro.locals.user!;
+
+const [announcementsRes, ownProjectsRes, shopItemsRes, shopOrdersRes, galleryRes, transactionsRes] =
+  await Promise.all([
+    serverApiFetch(Astro.request, "/announcements"),
+    serverApiFetch(Astro.request, "/projects"),
+    serverApiFetch(Astro.request, "/shop"),
+    serverApiFetch(Astro.request, "/shop/orders"),
+    serverApiFetch(Astro.request, "/gallery"),
+    serverApiFetch(Astro.request, "/me/transactions?page=1"),
+  ]);
+
+const announcements = announcementsRes.ok ? await announcementsRes.json() : [];
+const ownProjects = ownProjectsRes.ok ? await ownProjectsRes.json() : [];
+const shopItems = shopItemsRes.ok ? await shopItemsRes.json() : [];
+const shopOrders = shopOrdersRes.ok ? await shopOrdersRes.json() : [];
+const galleryProjects = galleryRes.ok ? await galleryRes.json() : [];
+const initialTransactions = transactionsRes.ok ? await transactionsRes.json() : [];
+---
+
+<DashboardLayout title="Dashboard">
+  <DashboardRoom
+    client:load
+    user={{
+      id: user.id,
+      nickname: user.nickname,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      isAdmin: user.isAdmin,
+      molesBalance: user.molesBalance,
+    }}
+    {galleryProjects}
+    {ownProjects}
+    {shopItems}
+    {shopOrders}
+    {announcements}
+    {initialTransactions}
+  />
+</DashboardLayout>
