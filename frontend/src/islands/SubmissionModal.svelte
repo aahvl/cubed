@@ -17,7 +17,7 @@
   import { apiFetch } from "../lib/api-client";
   import PopupShell from "./room/PopupShell.svelte";
   import { getContext } from "svelte";
-  import { ID_VERIFIED_CONTEXT, NOT_VERIFIED_MESSAGE } from "../lib/verification";
+  import { CAN_SUBMIT_CONTEXT, ID_VERIFIED_CONTEXT, NOT_VERIFIED_MESSAGE, SUBMISSIONS_CLOSED_MESSAGE } from "../lib/verification";
 
   let { projectId, project, onSuccess } = $props();
 
@@ -115,8 +115,13 @@
   }
 
   const idVerified = getContext(ID_VERIFIED_CONTEXT) !== false;
+  const canSubmit = getContext(CAN_SUBMIT_CONTEXT) !== false;
 
   function openModal() {
+    if (!canSubmit) {
+      setTemporaryError(SUBMISSIONS_CLOSED_MESSAGE, 15000);
+      return;
+    }
     if (!idVerified) {
       setTemporaryError(NOT_VERIFIED_MESSAGE, 15000);
       return;
@@ -218,6 +223,9 @@
         }
         if (body.error === "not_verified") {
           throw new Error(NOT_VERIFIED_MESSAGE);
+        }
+        if (body.error === "submissions_closed") {
+          throw new Error(SUBMISSIONS_CLOSED_MESSAGE);
         }
         if (body.error === "eligibility_unverifiable") {
           throw new Error("We couldn't verify your eligibility right now. Please try again in a moment.");

@@ -5,7 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { desc, eq, gte, isNotNull, sql } from "drizzle-orm";
 import { db } from "../db/client.js";
-import { adminActions, announcements, orders, projects, shopItems, submissions, transactions, users } from "../db/schema.js";
+import { adminActions, announcements, orders, projects, shopItems, submissionExemptions, submissions, transactions, users } from "../db/schema.js";
 import { requireAuth, requireAdmin, type SessionContext } from "../lib/session.js";
 import { runAirtableSync } from "../jobs/airtable-sync.js";
 import { syncEligibility } from "../jobs/eligibility-sync.js";
@@ -15,6 +15,7 @@ import { deleteProjectPhoto } from "../integrations/hackclub-cdn.js";
 import { ANALYTICS_RANGES, buildAnalytics } from "./admin-analytics.js";
 import { text } from "../lib/text.js";
 import { logAdminAction } from "../lib/audit.js";
+import { areSubmissionsOpen, setSubmissionsOpen } from "../lib/submissions-gate.js";
 
 const announcementColumns = {
   id: announcements.id,
@@ -152,6 +153,64 @@ adminRoutes.post("/users/:id/reset-nickname", zValidator("param", idParamSchema)
 });
 
 // The audit trail: newest first, 50 per page. Admins only (the whole router is).
+// Stop/resume all new submissions, and the people who may still submit while stopped.
+adminRoutes.get("/submissions", async (c) => {
+  const exemptions = await db
+    .select({ userId: users.id, nickname: users.nickname, slackId: users.slackId, addedAt: submissionExemptions.createdAt })
+    .from(submissionExemptions)
+    .innerJoin(users, eq(users.id, submissionExemptions.userId))
+    .orderBy(desc(submissionExemptions.createdAt));
+  return c.json({ open: await areSubmissionsOpen(), exemptions });
+});
+
+adminRoutes.post("/submissions/open", bodyLimit({ maxSize: 10 * 1024 }), zValidator("json", z.object({ open: z.boolean() })), async (c) => {
+  const { open } = c.req.valid("json");
+  await setSubmissionsOpen(open);
+  await logAdminAction({
+    actorId: c.get("user")!.id,
+    action: open ? "submissions.opened" : "submissions.stopped",
+    details: open ? "new submissions allowed again" : "new submissions stopped for everyone except exempted people",
+  });
+  return c.json({ open });
+});
+
+adminRoutes.post(
+  "/submissions/exemptions",
+  bodyLimit({ maxSize: 10 * 1024 }),
+  zValidator("json", z.object({ identifier: z.string().trim().min(1).max(100) })),
+  async (c) => {
+    const actor = c.get("user")!;
+    const { identifier } = c.req.valid("json");
+    // A Slack ID (exact) or a nickname (case-insensitive). A nickname can look like someone
+    // else's Slack ID, so a real Slack ID match always wins over a nickname match.
+    const [target] = await db
+      .select({ id: users.id, nickname: users.nickname, slackId: users.slackId })
+      .from(users)
+      .where(sql`${users.slackId} = ${identifier.toUpperCase()} or lower(${users.nickname}) = ${identifier.toLowerCase()}`)
+      .orderBy(sql`(${users.slackId} = ${identifier.toUpperCase()}) desc`)
+      .limit(1);
+    if (!target) return c.json({ error: "user_not_found" }, 404);
+
+    await db.insert(submissionExemptions).values({ userId: target.id, addedBy: actor.id }).onConflictDoNothing();
+    await logAdminAction({
+      actorId: actor.id,
+      action: "submissions.exemption_added",
+      targetType: "user",
+      targetId: target.id,
+      details: `${target.nickname ?? target.slackId} may submit while submissions are stopped`,
+    });
+    return c.json({ userId: target.id, nickname: target.nickname, slackId: target.slackId }, 201);
+  },
+);
+
+adminRoutes.delete("/submissions/exemptions/:id", zValidator("param", idParamSchema), async (c) => {
+  const { id } = c.req.valid("param");
+  const removed = await db.delete(submissionExemptions).where(eq(submissionExemptions.userId, id)).returning({ userId: submissionExemptions.userId });
+  if (removed.length === 0) return c.json({ error: "Not found" }, 404);
+  await logAdminAction({ actorId: c.get("user")!.id, action: "submissions.exemption_removed", targetType: "user", targetId: id });
+  return c.body(null, 204);
+});
+
 adminRoutes.get("/audit", zValidator("query", z.object({ page: z.coerce.number().int().min(1).max(10_000).default(1) })), async (c) => {
   const { page } = c.req.valid("query");
   const pageSize = 50;

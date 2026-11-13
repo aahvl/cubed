@@ -10,6 +10,7 @@ import { fetchHackatimeProjects } from "../integrations/hackatime.js";
 import { trackingRange } from "../lib/hackatime-selection.js";
 import { recheckEligibility } from "../lib/eligibility-check.js";
 import { text } from "../lib/text.js";
+import { canUserSubmit } from "../lib/submissions-gate.js";
 
 // Letters/numbers/underscores only — safe to show unescaped anywhere
 // (gallery cards, HUD, admin) without lookalike-character or whitespace tricks.
@@ -41,8 +42,10 @@ const onboardingSchema = z.object({
 
 export const meRoutes = new Hono<SessionContext>();
 
-meRoutes.get("/", requireAuth, (c) => {
-  return c.json(c.get("user"));
+meRoutes.get("/", requireAuth, async (c) => {
+  const user = c.get("user")!;
+  // Lets the UI explain a stopped submission window up front; the submit route enforces it.
+  return c.json({ ...user, canSubmit: await canUserSubmit(user.id) });
 });
 
 // Called by /blocked so a user who got unbanned/verified can get back in

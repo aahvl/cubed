@@ -8,13 +8,18 @@
 import AdminLayout from "../../layouts/AdminLayout.astro";
 import { serverApiFetch } from "../../lib/api";
 
-const [statsRes, announcementsRes] = await Promise.all([
+const [statsRes, announcementsRes, submissionsRes] = await Promise.all([
   serverApiFetch(Astro.request, "/admin/stats"),
   serverApiFetch(Astro.request, "/announcements"),
+  serverApiFetch(Astro.request, "/admin/submissions"),
 ]);
 
 const stats = statsRes.ok ? await statsRes.json() : null;
 const announcements = announcementsRes.ok ? await announcementsRes.json() : [];
+const submissionsControl: {
+  open: boolean;
+  exemptions: { userId: string; nickname: string | null; slackId: string }[];
+} | null = submissionsRes.ok ? await submissionsRes.json() : null;
 ---
 
 <AdminLayout title="Admin" requireAdmin>
@@ -65,6 +70,76 @@ const announcements = announcementsRes.ok ? await announcementsRes.json() : [];
       Audit log &rarr;
     </a>
   </div>
+
+  {
+    submissionsControl && (
+      <section class="mb-12">
+        <h2 class="mb-4 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Submissions</h2>
+        <div class="flex flex-col gap-5 rounded-none border-[6px] border-[#5c4429] bg-[#cfe0d5] p-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="text-sm">
+              New submissions are{" "}
+              <span class={`font-bold ${submissionsControl.open ? "text-[#2e4a3d]" : "text-red-700"}`}>
+                {submissionsControl.open ? "OPEN" : "STOPPED"}
+              </span>{" "}
+              {submissionsControl.open
+                ? "for everyone."
+                : "for everyone except the people below. Reviews, moles, the shop and drafts keep working."}
+            </p>
+            <button
+              type="button"
+              id="toggle-submissions"
+              data-open={submissionsControl.open ? "true" : "false"}
+              class={`cursor-pointer rounded-none border-2 border-[#5c4429] px-5 py-2.5 text-sm font-bold uppercase tracking-wide ${submissionsControl.open ? "bg-app-orange hover:bg-app-orange/70" : "bg-app-mint hover:bg-app-mint/70"}`}
+            >
+              {submissionsControl.open ? "Stop all submissions" : "Reopen submissions"}
+            </button>
+          </div>
+
+          <div>
+            <p class="mb-2 text-sm font-bold">Allowed to submit while stopped</p>
+            <form id="add-exemption-form" class="mb-3 flex flex-wrap gap-2">
+              <input
+                type="text"
+                name="identifier"
+                required
+                maxlength="100"
+                placeholder="Nickname or Slack ID"
+                class="min-w-0 flex-1 rounded-none border-2 border-[#5c4429]/40 bg-white px-3 py-2 text-sm outline-none focus:border-[#5c4429]"
+              />
+              <button
+                type="submit"
+                class="cursor-pointer rounded-none border-2 border-[#5c4429] bg-white px-4 py-2 text-xs font-bold uppercase tracking-wide hover:bg-app-mint/30"
+              >
+                Allow
+              </button>
+            </form>
+            {submissionsControl.exemptions.length === 0 ? (
+              <p class="text-sm text-black/60">Nobody yet.</p>
+            ) : (
+              <ul class="flex flex-col gap-2">
+                {submissionsControl.exemptions.map((person) => (
+                  <li class="flex items-center justify-between gap-3 rounded-none border-2 border-[#5c4429]/30 bg-white px-3 py-2 text-sm">
+                    <span>
+                      <span class="font-bold">{person.nickname ?? "(no nickname)"}</span>
+                      <span class="text-black/50"> · {person.slackId}</span>
+                    </span>
+                    <button
+                      type="button"
+                      data-remove-exemption={person.userId}
+                      class="cursor-pointer rounded-none border-2 border-[#5c4429]/40 bg-white px-3 py-1 text-xs font-bold uppercase hover:bg-app-orange"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <section>
     <h2 class="mb-4 text-xl text-[#2e4a3d]" style="font-family: var(--font-anta);">Announcements</h2>
@@ -148,6 +223,45 @@ const announcements = announcementsRes.ok ? await announcementsRes.json() : [];
     });
     if (!res.ok) throw new Error("Request failed");
   }
+
+  document.getElementById("toggle-submissions")?.addEventListener("click", async (e) => {
+    const button = e.currentTarget;
+    const stopping = button.getAttribute("data-open") === "true";
+    if (stopping && !confirm("Stop ALL new submissions? Only the people on the allowed list will be able to submit.")) return;
+    try {
+      await sendJson("POST", "/admin/submissions/open", { open: !stopping });
+      window.location.reload();
+    } catch {
+      alert("Couldn't change that. Please try again.");
+    }
+  });
+
+  document.getElementById("add-exemption-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const identifier = String(new FormData(e.currentTarget).get("identifier") ?? "").trim();
+    if (!identifier) return;
+    const res = await fetch(`${backendUrl}/admin/submissions/exemptions`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json", "X-Requested-With": "cubed" },
+      body: JSON.stringify({ identifier }),
+    });
+    if (res.ok) window.location.reload();
+    else alert(res.status === 404 ? "No user with that nickname or Slack ID." : "Couldn't add that person.");
+  });
+
+  document.querySelectorAll("[data-remove-exemption]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const id = button.getAttribute("data-remove-exemption");
+      const res = await fetch(`${backendUrl}/admin/submissions/exemptions/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "X-Requested-With": "cubed" },
+      });
+      if (res.ok) window.location.reload();
+      else alert("Couldn't remove that person.");
+    });
+  });
 
   document.getElementById("new-announcement-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();

@@ -14,6 +14,7 @@ import { projects, submissions } from "../db/schema.js";
 import { requireAuth, requireNotBlocked, type SessionContext } from "../lib/session.js";
 import { MAX_DRAFTS_PER_USER, MAX_SUBMISSION_ATTEMPTS, takePhotoUploadSlot } from "../lib/limits.js";
 import { findHoursOverlaps } from "../lib/hours-overlap.js";
+import { canUserSubmit } from "../lib/submissions-gate.js";
 import { deleteOrQueue, queueSubmissionSweep, submissionMarker } from "../lib/airtable-cleanup.js";
 import { findRejectedReuse } from "../lib/reuse-block.js";
 import { buildSubmissionHistory } from "../lib/submission-history.js";
@@ -472,6 +473,11 @@ async function handleSubmission(c: Context<SessionContext>) {
   const projectId = c.req.param("id");
   if (!projectId) {
     return c.json({ error: "Not found" }, 404);
+  }
+
+  // An admin can stop all new submissions; exempted people still get through.
+  if (!(await canUserSubmit(user.id))) {
+    return c.json({ error: "submissions_closed" }, 403);
   }
 
   // Live re-check, not just relying on the value from login — eligibility

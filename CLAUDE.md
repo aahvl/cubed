@@ -159,6 +159,10 @@ the actual code, the code wins — fix the file, don't trust the doc.
   partial unique index on `submissions.project_id` backs this up. The Hackatime user ID is never
   accepted from the client — PATCH verifies the selected project names
   against the caller's own Hackatime account and sets the ID from that lookup.
+- **Admins can stop all new submissions** (admin panel → Submissions; `lib/submissions-gate.ts`), with a
+  per-person allow list for exceptions. It blocks only `POST /projects/:id/submit` (resubmits included) —
+  reviews, moles, the shop and drafts keep working — and no `app_settings` row means open, so it
+  defaults to doing nothing. `/me` exposes `canSubmit` for the UI; the submit route is the real check.
 - **Only the exact status `rejected` rejects.** Any status the code doesn't know (a new
   reviewer option like "2nd pass", or a typo) leaves the submission pending and is logged
   once; teams can add statuses without anything being rejected by accident. The status
@@ -225,7 +229,7 @@ the actual code, the code wins — fix the file, don't trust the doc.
   went through a review round can't be deleted (it holds the attempt count and the
   reviewer's notes; deleting it would hand out fresh attempts).
 - **Hackatime hours are always counted from June 1 (`config.programStartDate`)
-  to Nov 10 (`config.programEndDate`), the same window for everyone.** Users never pick dates: the client sends only project names, the
+  to Nov 21 (`config.programEndDate`), the same window for everyone.** Users never pick dates: the client sends only project names, the
   backend verifies them against the caller's own Hackatime account, builds the
   date range itself, and re-verifies at submit. The total tracked time of the selected projects is snapshotted
   into `projects.hackatime_seconds` (on selection and again at submit, from the

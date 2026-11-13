@@ -49,6 +49,7 @@ const initialTransactions = transactionsRes.ok ? await transactionsRes.json() : 
       isAdmin: user.isAdmin,
       molesBalance: user.molesBalance,
       idVerified: user.yswsStatus === "verified_eligible",
+      canSubmit: user.canSubmit !== false,
     }}
     galleryProjects={gallery.items}
     galleryHasMore={gallery.hasMore}

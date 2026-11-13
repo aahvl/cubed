@@ -371,3 +371,20 @@ export const airtableCleanup = pgTable("airtable_cleanup", {
   attempts: integer("attempts").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+// Admin-controlled switches that must survive restarts (key/value, text values). A missing row
+// means the default; see lib/submissions-gate.ts for the one key in use today.
+export const appSettings = pgTable("app_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// People who may still submit projects while submissions are stopped for everyone else.
+export const submissionExemptions = pgTable("submission_exemptions", {
+  userId: uuid("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  addedBy: uuid("added_by").references(() => users.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

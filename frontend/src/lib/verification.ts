@@ -8,3 +8,6 @@ export const VERIFY_URL = "https://auth.hackclub.com";
 
 // Svelte context key: DashboardRoom provides it, the popups read it.
 export const ID_VERIFIED_CONTEXT = "idVerified";
+
+export const SUBMISSIONS_CLOSED_MESSAGE = "Submissions are closed right now. You can keep working on your drafts.";
+export const CAN_SUBMIT_CONTEXT = "canSubmit";

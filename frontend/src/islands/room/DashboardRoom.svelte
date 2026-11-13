@@ -38,7 +38,7 @@
 
   import { setContext } from "svelte";
   import { apiFetch } from "../../lib/api-client";
-  import { ID_VERIFIED_CONTEXT } from "../../lib/verification";
+  import { CAN_SUBMIT_CONTEXT, ID_VERIFIED_CONTEXT } from "../../lib/verification";
   import VerificationBanner from "./VerificationBanner.svelte";
   import DashboardHud from "./DashboardHud.svelte";
   import GalleryPopup from "./GalleryPopup.svelte";
@@ -67,6 +67,7 @@
   // people who haven't finished ID verification. Static: the banner's
   // "I've verified" button reloads the page once the backend confirms.
   setContext(ID_VERIFIED_CONTEXT, user.idVerified !== false);
+  setContext(CAN_SUBMIT_CONTEXT, user.canSubmit !== false);
 
   // Selected gallery/own-project detail mirrors into the URL as
   // `?gallery=<id>` or `?project=<id>` (mutually exclusive), so it's

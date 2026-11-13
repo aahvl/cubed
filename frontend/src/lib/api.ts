@@ -51,6 +51,8 @@ export type Me = {
   yswsStatus: YswsStatus | null;
   molesBalance: number;
   onboardedAt: string | null;
+  // False while an admin has stopped submissions (unless this person is exempted).
+  canSubmit?: boolean;
 };
 
 export class BackendUnavailableError extends Error {}
