@@ -1,6 +1,7 @@
-# Claude Code local config — not tracked. (CLAUDE.md IS tracked: DEVELOPER.md
-# links to it for the project rules.)
+# Claude Code local config and project rules — kept locally, never pushed.
 .claude/
+CLAUDE.md
+frontend/CLAUDE.md
 
 # planning docs — not tracked
 docs/*.md

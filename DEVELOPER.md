@@ -46,7 +46,7 @@ They communicate over plain HTTP with an explicit CORS allowlist — there's
 no shared code, shared types, or shared process between them. If you're
 looking for "the single source of truth" for anything, it's always one of:
 `backend/src/db/schema.ts` (data model), the route file for a given
-feature, or [`CLAUDE.md`](CLAUDE.md) (rules and rationale that don't
+feature, or `CLAUDE.md` (kept locally, not in this repo) (rules and rationale that don't
 belong in code comments) — **not** this file. This file explains how the
 pieces fit together and how to run them; it deliberately doesn't restate
 exact field/column/route names that drift as the code changes.
@@ -101,8 +101,7 @@ draft → submitted → approved
 │       ├── components/    Static Astro components (landing page, docs)
 │       ├── content/docs/  Markdown docs content (rendered at /docs)
 │       └── lib/           Backend API client, session helpers, eligibility copy
-├── docker-compose.yaml    Local Postgres (+ optional full-stack compose)
-└── CLAUDE.md              Ground-truth rules/rationale for AI-assisted work on this repo
+└── docker-compose.yaml    Local Postgres (+ optional full-stack compose)
 ```
 
 ## The Frontend
@@ -255,7 +254,7 @@ two points where it matters — submitting a project and buying from the shop �
 via `lib/eligibility-check.ts`'s `checkEligibilityForGate()`, which persists
 whatever fresh result it gets before deciding, so a newly-banned user is
 blocked on that exact request. A brand-new Slack identity that is hard-blocked
-on its very first login never gets a user row or session at all. See the "Eligibility gating" section of [`CLAUDE.md`](CLAUDE.md)
+on its very first login never gets a user row or session at all. See the "Eligibility gating" section of `CLAUDE.md` (kept locally, not in this repo)
 for the full rationale and the frontend-side redirect logic.
 
 ### Database
@@ -437,7 +436,7 @@ only source of truth.
 
 ## Contributing
 
-Read [`CLAUDE.md`](CLAUDE.md) before making a change that touches money,
+Read `CLAUDE.md` (kept locally, not in this repo) before making a change that touches money,
 PII, or auth — it documents the non-negotiable rules and the reasoning
 behind decisions that aren't obvious from the code alone (why there's no
 resubmit path, why Airtable sync is one-directional, why eligibility is
